@@ -1,0 +1,28 @@
+{
+  "name": "agent-service",
+  "version": "1.0.0",
+  "description": "LangChain.js Agent 服务 — AI 对话 SSE",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts"
+  },
+  "keywords": ["langchain", "agent", "sse", "openai"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^7.9.1",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.16",
+    "ollama": "^0.5.9"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "prisma": "^7.9.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

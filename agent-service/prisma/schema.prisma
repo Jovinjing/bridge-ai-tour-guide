@@ -1,0 +1,54 @@
+// 赵州桥AI科普导游系统 — agent schema
+// 包含：会话管理、消息、工具调用
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// 会话表（游客模式 + 用户模式）
+model AgentSession {
+  id          String    @id @db.VarChar(50)
+  userId      String?   @map("user_id") @db.VarChar(100)
+  sessionId   String    @map("session_id") @db.VarChar(50)
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  messages    AgentMessage[]
+
+  @@index([sessionId], map: "idx_agent_sessions_session_id")
+  @@map("agent_sessions")
+}
+
+/// 消息表（对话历史）
+model AgentMessage {
+  id          String    @id @db.VarChar(50)
+  sessionId   String    @map("session_id") @db.VarChar(50)
+  role        String    @db.VarChar(50)
+  content     String?
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  session     AgentSession @relation(fields: [sessionId], references: [id])
+  toolCalls   AgentToolCall[]
+
+  @@index([sessionId], map: "idx_agent_messages_session_id")
+  @@map("agent_messages")
+}
+
+/// 工具调用记录表
+model AgentToolCall {
+  id          String    @id @db.VarChar(50)
+  messageId   String    @map("message_id") @db.VarChar(50)
+  toolName    String    @map("tool_name") @db.VarChar(100)
+  arguments   String?
+  result      String?
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  message     AgentMessage @relation(fields: [messageId], references: [id])
+
+  @@index([messageId], map: "idx_agent_tool_calls_message_id")
+  @@map("agent_tool_calls")
+}
