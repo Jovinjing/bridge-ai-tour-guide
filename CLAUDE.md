@@ -104,12 +104,21 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 0 — 项目初始化 |
-| **当前任务** | Phase 0.1 — NestJS 脚手架搭建 |
-| **下一步** | `nest new` + Prisma + public schema 迁移 |
-| **最新 commit** | `30be510` — docs: 后端设计文档 + API接口约定 + 实施路线图 |
-| **当前分支** | `main` |
+| **阶段** | Phase 0 — 项目初始化（90% 完成） |
+| **当前任务** | Phase 1 — Agent SSE 流式服务 |
+| **下一步** | Agent Chat SSE 端点 + LangChain 集成 |
+| **最新 commit** | `462c9c9` — feat: 添加 Nginx 反向代理配置 |
+| **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
+
+### Phase 0 已完成项
+- ✅ NestJS 脚手架 + Prisma Client（pg adapter）
+- ✅ Express Agent 服务骨架
+- ✅ PostgreSQL + pgvector Docker 容器（端口 5433）
+- ✅ Auth API（register/login + JWT）
+- ✅ Cultural API（列表 + 详情，含分页）
+- ✅ Nginx 反向代理配置
+- ✅ 健康检查端点 (/health)
 
 ---
 
