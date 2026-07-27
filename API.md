@@ -241,7 +241,20 @@ GET /api/tickets
 }]
 ```
 
-### 4.2 热力图数据
+### 4.2 门票详情
+
+```
+GET /api/tickets/:id
+```
+
+### 4.3 按类型筛选
+
+```
+GET /api/tickets/type/:type
+```
+// type: 成人票 | 学生票 | 团体票 | 免票预约
+
+### 4.4 热力图数据
 
 ```
 GET /api/tickets/heatmap?start=2026-07-01&end=2026-07-31
@@ -330,27 +343,128 @@ POST /api/orders/:id/pay
 }
 ```
 
+### 5.5 取消订单 🔒
+
+```
+POST /api/orders/:id/cancel
+```
+
+### 5.6 退款 🔒
+
+```
+POST /api/orders/:id/refund
+```
+
+### 5.7 按用户查询 🔒
+
+```
+GET /api/orders/user/:userId?page=1&pageSize=10
+```
+
 ---
 
-## 6. 文化内容模块 `/api/cultural`
+## 6. 地址模块 `/api/addresses` 🔒
 
-### 6.1 内容列表
+### 6.1 地址列表
+
+```
+GET /api/addresses
+```
+
+### 6.2 地址详情
+
+```
+GET /api/addresses/:id
+```
+
+### 6.3 新增地址
+
+```
+POST /api/addresses
+```
+
+请求：
+```json
+{
+  "name": "张三",
+  "phone": "13800138000",
+  "province": "河北省",
+  "city": "石家庄市",
+  "district": "长安区",
+  "detail": "中山东路100号",
+  "isDefault": true
+}
+```
+
+### 6.4 更新地址
+
+```
+PUT /api/addresses/:id
+```
+
+### 6.5 删除地址
+
+```
+DELETE /api/addresses/:id
+```
+
+---
+
+## 7. 购物车模块 `/api/cart` 🔒
+
+### 7.1 获取购物车
+
+```
+GET /api/cart
+```
+
+### 7.2 添加商品
+
+```
+POST /api/cart
+```
+
+请求：
+```json
+{
+  "productId": 58,
+  "quantity": 1
+}
+```
+
+### 7.3 移除商品
+
+```
+DELETE /api/cart/:id
+```
+
+---
+
+## 8. 文化内容模块 `/api/cultural`
+
+### 8.1 内容列表
 
 ```
 GET /api/cultural?page=1&pageSize=10&category=历史
 ```
 
-### 6.2 内容详情
+### 8.2 内容详情
 
 ```
 GET /api/cultural/:id
 ```
 
+### 8.3 全量资讯
+
+```
+GET /api/cultural/all
+```
+
 ---
 
-## 7. 会话模块 `/api/sessions`（Nest 代理 → Agent）
+## 9. 会话模块 `/api/sessions`（Nest 代理 → Agent）
 
-### 7.1 我的会话列表 🔒
+### 9.1 我的会话列表 🔒
 
 ```
 GET /api/sessions?page=1&pageSize=20
@@ -368,7 +482,7 @@ GET /api/sessions?page=1&pageSize=20
 }]
 ```
 
-### 7.2 会话消息历史
+### 9.2 会话消息历史
 
 ```
 GET /api/sessions/:id
@@ -400,7 +514,7 @@ GET /api/sessions/:id
 }
 ```
 
-### 7.3 更新会话
+### 9.3 更新会话
 
 ```
 PATCH /api/sessions/:id
@@ -413,7 +527,7 @@ PATCH /api/sessions/:id
 }
 ```
 
-### 7.4 删除会话
+### 9.4 删除会话
 
 ```
 DELETE /api/sessions/:id
@@ -421,9 +535,9 @@ DELETE /api/sessions/:id
 
 ---
 
-## 8. 收藏模块 `/api/favorites` 🔒
+## 10. 收藏模块 `/api/favorites` 🔒
 
-### 8.1 添加收藏
+### 10.1 添加收藏
 
 ```
 POST /api/favorites
@@ -438,13 +552,13 @@ POST /api/favorites
 // targetType: "product" | "ticket" | "article"
 ```
 
-### 8.2 我的收藏
+### 10.2 我的收藏
 
 ```
 GET /api/favorites?page=1&pageSize=20
 ```
 
-### 8.3 取消收藏
+### 10.3 取消收藏
 
 ```
 DELETE /api/favorites/:id
@@ -452,7 +566,7 @@ DELETE /api/favorites/:id
 
 ---
 
-## 9. 文件上传 `/api/upload` 🔒
+## 11. 文件上传 `/api/upload` 🔒
 
 ```
 POST /api/upload
@@ -480,7 +594,7 @@ Content-Type: multipart/form-data
 
 ---
 
-## 10. Agent SSE 对话（直连） `/agent/chat`
+## 12. Agent SSE 对话（直连） `/agent/chat`
 
 **不与 NestJS 交互，Nginx 直接路由至 Agent 服务。**
 
@@ -590,20 +704,80 @@ data: {"code":"RATE_LIMITED","message":"请求过于频繁，请稍后重试"}
 | `AI_ERROR` | 大模型调用失败 |
 | `INTERNAL_ERROR` | 服务内部错误 |
 
+## 13. 健康检查 `/api/health`
+
+```
+GET /api/health
+```
+
+响应：
+```json
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "status": "ok",
+    "services": {
+      "nestjs": true,
+      "agent": true,
+      "postgres": true
+    }
+  }
+}
+```
+
 ---
 
-## 11. 附录：旧 API → 新 API 迁移对照
-
-前端做 TS 迁移时，以下是关键接口路径变更：
+## 14. 附录：旧 API → 新 API 迁移对照（完整）
 
 | 旧接口 | 新接口 | 变更说明 |
 |--------|--------|----------|
-| `POST /api/user/login` | `POST /api/auth/login` | 路径 + 参数格式变更 |
-| `POST /api/user/register` | `POST /api/auth/send-code` + `/api/auth/login` | 先验证码再登录 |
-| `GET /api/user/info` | `GET /api/auth/me` | 路径变更 |
+| **认证/用户** | | |
+| `POST /api/user/login` | `POST /api/auth/login` | 参数格式变更（验证码替代密码） |
+| `POST /api/user/register` | `POST /api/auth/send-code` + `POST /api/auth/login` | 两步流程 |
+| `GET /api/user/users/{id}` | `GET /api/auth/me` | 仅查自己，不按 ID 查任意用户 |
+| `PUT /api/user/users/{id}` | `PATCH /api/auth/me` | 更新个人信息 |
 | `POST /api/user/avatar/upload` | `POST /api/auth/avatar/upload` | 收归 auth 模块 |
-| `GET /api/goods/list` | `GET /api/goods` | query 参数统一 |
-| `POST /api/order/pay?orderNo=xxx` | `POST /api/orders/:id/pay` | RESTful 风格 |
-| `GET /api/cultural/list` | `GET /api/cultural` | 路径简化 |
-| SSE `/api/ai/explain/stream` | SSE `/agent/chat` | 直连 Agent，事件协议变更 |
-| `POST /api/ai/agent` | `POST /agent/chat` | 合并为 SSE 流式 |
+| `POST /api/user/wx-login` | 废弃 | PC 端不接入微信登录 |
+| `GET /api/user/oauth/callback` | 废弃 | 同上 |
+| **地址** | | |
+| `GET /api/user/address` | `GET /api/addresses` | 独立模块 |
+| `GET /api/user/address/{id}` | `GET /api/addresses/:id` | |
+| `POST /api/user/address` | `POST /api/addresses` | |
+| `PUT /api/user/address/{id}` | `PUT /api/addresses/:id` | |
+| `DELETE /api/user/address/{id}` | `DELETE /api/addresses/:id` | |
+| **商品** | | |
+| `GET /api/cultural/products` | `GET /api/goods` | 路径重构 |
+| `GET /api/cultural/products/{id}` | `GET /api/goods/:id` | |
+| `GET /api/goods/all` | `GET /api/goods?pageSize=100` | 分页替代全量 |
+| `GET /api/goods/one?id=x` | `GET /api/goods/:id` | RESTful |
+| **门票** | | |
+| `GET /api/goods/tickets` | `GET /api/tickets` | 独立门票模块 |
+| `GET /api/goods/tickets/{id}` | `GET /api/tickets/:id` | |
+| `GET /api/goods/tickets/type/{type}` | `GET /api/tickets/type/:type` | |
+| `GET /api/goods/tickets/heatmap/range` | `GET /api/tickets/heatmap` | 参数名 startDate→start |
+| **购物车** | | |
+| `GET /api/cultural/cart` | `GET /api/cart` | 独立模块 |
+| `POST /api/cultural/cart` | `POST /api/cart` | body 不再传 userId |
+| **订单** | | |
+| `POST /api/order/create/ticket` | `POST /api/orders` | 合并为单端点 + orderType |
+| `POST /api/order/create/cultural` | `POST /api/orders` | 同上 |
+| `GET /api/order/all` | `GET /api/orders` | |
+| `GET /api/order/{id}` | `GET /api/orders/:id` | |
+| `GET /api/order/no/{orderNo}` | `GET /api/orders?orderNo=xxx` | query 参数替代路径 |
+| `GET /api/order/user/{userId}` | `GET /api/orders/user/:userId` | |
+| `POST /api/order/pay` | `POST /api/orders/:id/pay` | RESTful |
+| `POST /api/order/{id}/cancel` | `POST /api/orders/:id/cancel` | |
+| `POST /api/order/{id}/refund` | `POST /api/orders/:id/refund` | |
+| **文化内容** | | |
+| `GET /api/cultural/info` | `GET /api/cultural` | |
+| `GET /api/cultural/info/{id}` | `GET /api/cultural/:id` | |
+| `GET /api/cultural/info/all` | `GET /api/cultural/all` | |
+| **AI 对话** | | |
+| SSE `GET /api/ai/explain/stream` | SSE `POST /agent/chat` | POST + ReadableStream 替代 EventSource |
+| `POST /api/ai/agent` | 合并入 `/agent/chat` | 非流式废弃 |
+| `DELETE /api/ai/session/{id}` | `DELETE /api/sessions/:id` | 归入 sessions 模块 |
+| **新增** | | |
+| — | `POST /api/favorites` | 收藏功能 |
+| — | `POST /api/upload` | 通用文件上传 |
+| — | `GET /api/health` | 健康检查 |
