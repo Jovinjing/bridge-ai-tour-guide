@@ -108,7 +108,7 @@ feature/<功能名> ──→ 用户检查 ──→ main
 | **当前任务** | Phase 0.1 — NestJS 脚手架搭建 |
 | **下一步** | `nest new` + Prisma + public schema 迁移 |
 | **最新 commit** | `30be510` — docs: 后端设计文档 + API接口约定 + 实施路线图 |
-| **当前分支** | `feature/project-setup` |
+| **当前分支** | `main` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
 ---
