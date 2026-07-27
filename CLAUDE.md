@@ -104,11 +104,12 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | 设计期（DAY 1） |
-| **当前任务** | 编写 DESIGN.md + API.md |
-| **下一步** | 搭建 NestJS 项目骨架 |
-| **最新 commit** | `e035512` — first commit |
-| **当前分支** | `main` |
+| **阶段** | Phase 0 — 项目初始化 |
+| **当前任务** | Phase 0.1 — NestJS 脚手架搭建 |
+| **下一步** | `nest new` + Prisma + public schema 迁移 |
+| **最新 commit** | `30be510` — docs: 后端设计文档 + API接口约定 + 实施路线图 |
+| **当前分支** | `feature/project-setup` |
+| **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
 ---
 
