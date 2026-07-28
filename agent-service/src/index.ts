@@ -1,9 +1,12 @@
+import 'dotenv/config';
+
 import express from 'express';
 import { Server } from 'http';
 import { chatRoute } from './routes/chat';
+import { printLLMConfig } from './llm/deepseek';
 
 const app = express();
-const PORT = 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 let server: Server | undefined;
 
 // 中间件
@@ -20,6 +23,7 @@ app.get('/health', (req, res) => {
 export function startServer(): void {
   server = app.listen(PORT, () => {
     console.log(`🚀 Agent 服务启动在 http://localhost:${PORT}`);
+    printLLMConfig();
   });
 }
 
