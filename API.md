@@ -209,27 +209,57 @@ Content-Type: multipart/form-data
 ### 3.1 商品列表
 
 ```
-GET /api/goods?page=1&pageSize=10&category=纪念品&keyword=冰箱贴
+GET /api/goods?page=1&pageSize=10&keyword=冰箱贴&inStock=true&sortBy=price&order=asc
 ```
 
-响应 `data.content`：
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `page` | number | 否 | 页码，默认 1 |
+| `pageSize` | number | 否 | 每页数量，默认 10，最大 50 |
+| `keyword` | string | 否 | 搜索关键词（匹配名称和描述） |
+| `inStock` | boolean | 否 | 仅显示有库存 |
+| `sortBy` | string | 否 | 排序字段：`price` / `createdAt` |
+| `order` | string | 否 | 排序方向：`asc` / `desc` |
+
+响应：
 ```json
-[{
-  "id": 58,
-  "name": "赵州桥冰箱贴",
-  "category": "纪念品",
-  "description": "珐琅工艺，精致美观",
-  "price": 20.00,
-  "imageUrl": "/assets/赵州桥冰箱贴.jpg",
-  "stock": 493,
-  "status": 1
-}]
+{
+  "items": [
+    {
+      "id": 58,
+      "name": "赵州桥冰箱贴",
+      "description": "珐琅工艺，精致美观",
+      "price": 20.00,
+      "stock": 493,
+      "imageUrl": "/assets/赵州桥冰箱贴.jpg",
+      "createdAt": "2026-07-28T01:00:00.000Z"
+    }
+  ],
+  "total": 15,
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 2
+}
 ```
 
 ### 3.2 商品详情
 
 ```
 GET /api/goods/:id
+```
+
+响应：
+```json
+{
+  "id": 58,
+  "name": "赵州桥冰箱贴",
+  "description": "珐琅工艺，精致美观",
+  "price": 20.00,
+  "stock": 493,
+  "imageUrl": "/assets/赵州桥冰箱贴.jpg",
+  "createdAt": "2026-07-28T01:00:00.000Z",
+  "updatedAt": "2026-07-28T01:00:00.000Z"
+}
 ```
 
 ---
