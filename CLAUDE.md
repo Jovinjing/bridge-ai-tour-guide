@@ -104,10 +104,10 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 0 已完成 ✅ → Phase 1 进行中 |
-| **当前任务** | Phase 1 — NestJS 业务 CRUD |
-| **下一步** | Phase 1.3 — 商品模块（GET /api/goods/*） |
-| **最新 commit** | 待提交 — feat: 用户资料 + 头像上传 |
+| **阶段** | Phase 1 已完成 ✅ → Phase 2 待开工 |
+| **当前任务** | Phase 2 — Agent 服务 |
+| **下一步** | Phase 2.1 — DeepSeek Chat + Embedding 配置 |
+| **最新 commit** | 待提交 — feat: Phase 1 全部完成 |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
