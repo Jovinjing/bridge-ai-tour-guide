@@ -47,7 +47,7 @@
 
 | # | 任务 | 产出 | 状态 |
 |---|------|------|------|
-| 2.1 | DeepSeek Chat + Embedding 配置 | LLM 连接就绪 | ⏳ |
+| 2.1 | DeepSeek Chat + Embedding 配置 | LLM 连接就绪 | ✅ |
 | 2.2 | 10 篇赵州桥知识文档导入 + 向量化 | pgvector 数据就绪 | ⏳ |
 | 2.3 | 工具适配层 + 5 个工具实现 | 工具全部可用 | ⏳ |
 | 2.4 | System Prompt 移植 + AgentExecutor 组装 | Agent 能对话 | ⏳ |
@@ -102,12 +102,12 @@
 
 ## 当前任务指针
 
-→ **Phase 2.1**：DeepSeek Chat + Embedding 配置
+→ **Phase 2.2**：10 篇赵州桥知识文档导入 + 向量化
 
 ```
-上次完成：Phase 1 — NestJS 业务 CRUD（全部 9 个模块）
+上次完成：Phase 2.1 — DeepSeek Chat + Embedding 配置
 当前：    Phase 2 — Agent 服务
-下一步：  Phase 2.1 — LLM 连接就绪
+下一步：  Phase 2.2 — pgvector 数据就绪
 ```
 
 ---

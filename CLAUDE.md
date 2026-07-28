@@ -104,10 +104,10 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 1 已完成 ✅ → Phase 2 待开工 |
-| **当前任务** | Phase 2 — Agent 服务 |
-| **下一步** | Phase 2.1 — DeepSeek Chat + Embedding 配置 |
-| **最新 commit** | 待提交 — feat: Phase 1 全部完成 |
+| **阶段** | Phase 0-1 已完成 ✅ → Phase 2 进行中 |
+| **当前任务** | Phase 2.2 — 知识文档向量化 |
+| **下一步** | 从旧项目导入 10 篇赵州桥文档 → pgvector |
+| **最新 commit** | `8924aff` feat: Phase 2.1 DeepSeek Chat + Embedding 配置 |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
@@ -120,6 +120,13 @@ feature/<功能名> ──→ 用户检查 ──→ main
 - ✅ Nginx 反向代理配置
 - ✅ 健康检查端点 (/health)
 - ✅ RSA 密钥对生成 + JWT 签发/验证联调（公钥签名 + 私钥验证）
+
+### Phase 1 已完成项
+- ✅ 9 个业务模块 + 14 个 API 端点
+- ✅ 36 个测试（27 单元 + 9 E2E）全部通过
+
+### Phase 2 已完成项
+- ✅ Phase 2.1 — DeepSeek Chat + Embedding LLM 配置
 
 ---
 
