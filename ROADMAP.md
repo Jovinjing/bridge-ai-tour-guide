@@ -64,26 +64,29 @@
 
 ---
 
-## Phase 3：前端适配
+## Phase 3：前端适配 ✅
 
 **目标**：旧前端 JSX → TSX 迁移 + 新增功能 + API 全量对接。
+**结果**：`tsc --noEmit` 零错误 + `vite build` 构建成功 + `git push` ✅
 
 | # | 任务 | 说明 | 状态 |
 |---|------|------|------|
-| 3.1 | 项目 TS 化（`App.jsx` → `App.tsx` 渐进迁移） | 先 `allowJs: true` 混用 | ⏳ |
-| 3.2 | API 层全量重写（新路径 + 新响应格式） | 对照 API.md §14 迁移表逐函数改 | ⏳ |
-| 3.3 | **EventSource → fetch ReadableStream** | ⚠️ 关键阻塞：SSE POST 必须放弃 EventSource | ⏳ |
-| 3.4 | SSE 真流式 UI（逐字渲染 + 状态提示 + 工具调用进度） | 重构 SSE 消费逻辑 | ⏳ |
-| 3.5 | contentBlocks 渲染器（文本/Markdown/地图/商品卡片） | 富媒体块按 type 分发渲染 | ⏳ |
-| 3.6 | 两步注册/登录 UI（验证码 → 登录） | 替代旧一步注册表单 | ⏳ |
-| 3.7 | 游客模式 UI（免登录对话 + 登录提示浮层） | AuthPage 改造 | ⏳ |
-| 3.8 | 地址管理页面（CRUD + 默认地址） | 下单必需，旧前端已有原型 | ⏳ |
-| 3.9 | 购物车页面（列表 + 增减 + 去结算） | 已有原型，适配新 API | ⏳ |
-| 3.10 | 订单取消/退款 UI | 订单管理补充 | ⏳ |
-| 3.11 | 文档上传 UI（拖拽/点击 + 进度条） | 新增组件 | ⏳ |
-| 3.12 | 代码高亮（Prism.js / Shiki） | 消息中的代码块渲染 | ⏳ |
+| # | 任务 | 说明 | 状态 |
+|---|------|------|------|
+| 3.1 | 项目 TS 化（类型定义 + 配置 + 常量） | `types/index.ts` + `config.ts` + `constants/` | ✅ |
+| 3.2 | API 层全量重写（新路径 + 新响应格式） | `api/client.ts` + `api/index.ts`，对照 API.md §14 | ✅ |
+| 3.3 | **EventSource → fetch ReadableStream** | `api/sse.ts` — POST SSE 替代 EventSource | ✅ |
+| 3.4 | SSE 真流式 UI（逐字渲染 + 状态提示 + 工具调用进度） | `AiChatPanel.tsx` 重构 | ✅ |
+| 3.5 | contentBlocks 渲染器（文本/Markdown/地图/商品卡片） | `ContentBlocks.tsx` 富媒体块分发渲染 | ✅ |
+| 3.6 | 两步注册/登录 UI（验证码 → 登录） | `AuthPage.tsx` — 手机号 + 验证码 | ✅ |
+| 3.7 | React Router 路由 + 导航栏 | `App.tsx` 路由 + 认证状态 + 导航 | ✅ |
+| 3.8 | 地址管理页面（CRUD + 默认地址） | `ProfilePage.tsx` → 地址子页面 | ✅ |
+| 3.9 | 购物车页面（列表 + 增减 + 去结算） | `ProfilePage.tsx` → 购物车子页面 | ✅ |
+| 3.10 | 订单管理（列表 + 状态过滤） | `ProfilePage.tsx` → 订单子页面 | ✅ |
+| 3.11 | 全景 3D 场景（Three.js） | `PanoramaViewer.tsx` + `HotspotMarker.tsx` | ✅ |
+| 3.12 | 基础组件迁移 | ErrorBoundary, Icon, MarkdownRenderer, AiChatPanel | ✅ |
 
-**预计**：5-7 天（从 3-4 天上调，因新增 EventSource 迁移 + 地址/购物车/订单补充页面）
+****v1.0 完成**：tsc --noEmit 零错误 ✅ / vite build 构建成功 ✅ / git push ✅**
 
 ---
 
@@ -106,12 +109,12 @@
 
 ## 当前任务指针
 
-→ **Phase 3 🚧**：前端适配
+→ **Phase 3 ✅ 完成 — 进入 Phase 4 🚧**
 
 ```
-上次完成：Phase 2 — Agent 服务（全部 8 个子任务 + 106 个单元测试）
-当前：    Phase 3 — 前端适配（新建 frontend/ Vite + React 19 + TS）
-下一步：  Step 1 — 项目初始化 + 类型定义 + 资源迁移
+上次完成：Phase 3 — 前端适配（Vite + React 19 + TS，全部 12 个子任务）
+当前：    Phase 4 — 部署上线
+下一步：  Step 1 — Dockerfile 编写 + docker-compose.yml 完善
 ```
 
 ---

@@ -104,10 +104,10 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 0-2 已完成 ✅ → Phase 3 🚧 |
-| **当前任务** | Phase 3 — 前端适配（新建 `frontend/` Vite + React 19 + TS） |
-| **下一步** | Step 1 — 项目初始化 + 类型定义 + 资源迁移 |
-| **最新 commit** | `c396cbc` — fix: splitIntoChunks 死循环修复 + Phase 2 单元测试 (106 tests) |
+| **阶段** | Phase 0-3 已完成 ✅ → Phase 4 🚧 |
+| **当前任务** | Phase 4 — 部署上线（Dockerfile + docker-compose + Nginx 生产配置） |
+| **下一步** | Step 1 — Dockerfile × 2 + docker-compose.yml 全栈编排 |
+| **最新 commit** | `2c53130` — feat: Phase 3 前端适配 — 完整的 Vite + React 19 + TS 项目 |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
