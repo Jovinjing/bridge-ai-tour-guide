@@ -120,7 +120,12 @@ export function splitIntoChunks(
     }
 
     chunks.push(chunkText.trim());
-    start += chunkText.length - overlap;
+
+    // 已到达文本末尾，退出
+    if (end >= text.length) break;
+
+    // 确保 start 始终前进（防止 chunkText.length <= overlap 导致死循环）
+    start += Math.max(1, chunkText.length - overlap);
   }
 
   return chunks.filter(c => c.length > 0);
