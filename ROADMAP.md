@@ -48,13 +48,13 @@
 | # | 任务 | 产出 | 状态 |
 |---|------|------|------|
 | 2.1 | DeepSeek Chat + Embedding 配置 | LLM 连接就绪 | ✅ |
-| 2.2 | 10 篇赵州桥知识文档导入 + 向量化 | pgvector 数据就绪 | ⏳ |
-| 2.3 | 工具适配层 + 5 个工具实现 | 工具全部可用 | ⏳ |
-| 2.4 | System Prompt 移植 + AgentExecutor 组装 | Agent 能对话 | ⏳ |
-| 2.5 | 真流式 SSE + contentBlocks + tool_call 中间态 | SSE 端点完整 | ⏳ |
-| 2.6 | 会话管理（CRUD + 记忆持久化） | session CRUD | ⏳ |
-| 2.7 | 游客模式（限轮次 + 24h 过期 + 升级绑定） | 游客流程 | ⏳ |
-| 2.8 | JWT 公钥验证中间件 | Agent 鉴权 | ⏳ |
+| 2.2 | 10 篇赵州桥知识文档导入 + 向量化 | pgvector 数据就绪 | ✅ |
+| 2.3 | 工具适配层 + 5 个工具实现 | 工具全部可用 | ✅ |
+| 2.4 | System Prompt 移植 + AgentExecutor 组装 | Agent 能对话 | ✅ |
+| 2.5 | 真流式 SSE + contentBlocks + tool_call 中间态 | SSE 端点完整 | ✅ |
+| 2.6 | 会话管理（CRUD + 记忆持久化） | session CRUD | ✅ |
+| 2.7 | 游客模式（限轮次 + 24h 过期 + 升级绑定） | 游客流程 | ✅ |
+| 2.8 | JWT 公钥验证中间件 | Agent 鉴权 | ✅（Phase 0.5 已完成） |
 
 **预计**：6-8 天
 
@@ -102,12 +102,12 @@
 
 ## 当前任务指针
 
-→ **Phase 2.2**：10 篇赵州桥知识文档导入 + 向量化
+→ **Phase 3.1**：前端项目 TS 化
 
 ```
-上次完成：Phase 2.1 — DeepSeek Chat + Embedding 配置
-当前：    Phase 2 — Agent 服务
-下一步：  Phase 2.2 — pgvector 数据就绪
+上次完成：Phase 2 — Agent 服务（全部 8 个子任务）
+当前：    Phase 3 — 前端适配
+下一步：  Phase 3.1 — 前端项目 TS 化（App.jsx → App.tsx 渐进迁移）
 ```
 
 ---

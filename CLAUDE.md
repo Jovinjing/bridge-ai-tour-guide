@@ -104,10 +104,10 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 0-1 已完成 ✅ → Phase 2 进行中 |
-| **当前任务** | Phase 2.2 — 知识文档向量化 |
-| **下一步** | 从旧项目导入 10 篇赵州桥文档 → pgvector |
-| **最新 commit** | `8924aff` feat: Phase 2.1 DeepSeek Chat + Embedding 配置 |
+| **阶段** | Phase 0-2 已完成 ✅ → Phase 3 待开工 |
+| **当前任务** | Phase 3 — 前端适配 |
+| **下一步** | Phase 3.1 — 前端项目 TS 化 |
+| **最新 commit** | 待提交 — feat: Phase 2 Agent 服务完成 |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
@@ -119,14 +119,21 @@ feature/<功能名> ──→ 用户检查 ──→ main
 - ✅ Cultural API（列表 + 详情，含分页）
 - ✅ Nginx 反向代理配置
 - ✅ 健康检查端点 (/health)
-- ✅ RSA 密钥对生成 + JWT 签发/验证联调（公钥签名 + 私钥验证）
+- ✅ RSA 密钥对生成 + JWT 签发/验证联调
 
 ### Phase 1 已完成项
 - ✅ 9 个业务模块 + 14 个 API 端点
 - ✅ 36 个测试（27 单元 + 9 E2E）全部通过
 
 ### Phase 2 已完成项
-- ✅ Phase 2.1 — DeepSeek Chat + Embedding LLM 配置
+- ✅ 2.1 DeepSeek Chat + Embedding LLM 配置
+- ✅ 2.2 10 篇赵州桥知识文档 + 向量化导入脚本
+- ✅ 2.3 工具适配层 + 5 个工具（searchKnowledge / queryProducts / planRoute / queryWeather / queryHotels）
+- ✅ 2.4 System Prompt 移植 + Agent 组装（langchain v1 createAgent）
+- ✅ 2.5 真流式 SSE 端点（token 流 + tool_call 中间态 + contentBlocks）
+- ✅ 2.6 会话管理（CRUD + 消息持久化）
+- ✅ 2.7 游客模式（UUID session + 10 轮限制 + 24h 过期 + 升级绑定）
+- ✅ 2.8 JWT 公钥验证中间件（Phase 0.5 已完成）
 
 ---
 

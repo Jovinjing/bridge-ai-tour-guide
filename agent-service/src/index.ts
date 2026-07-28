@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import { Server } from 'http';
 import { chatRoute } from './routes/chat';
+import { sessionsRoute } from './routes/sessions';
 import { printLLMConfig } from './llm/deepseek';
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 
 // 路由
 app.use('/agent', chatRoute);
+app.use('/agent/sessions', sessionsRoute);
 
 // 健康检查
 app.get('/health', (req, res) => {

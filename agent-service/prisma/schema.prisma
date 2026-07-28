@@ -11,27 +11,36 @@ datasource db {
 
 /// 会话表（游客模式 + 用户模式）
 model AgentSession {
-  id          String    @id @db.VarChar(50)
-  userId      String?   @map("user_id") @db.VarChar(100)
-  sessionId   String    @map("session_id") @db.VarChar(50)
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt   DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  id              String    @id @db.VarChar(50)
+  userId          String?   @map("user_id") @db.VarChar(100)
+  sessionId       String    @map("session_id") @db.VarChar(50)
+  guestId         String?   @map("guest_id") @db.VarChar(100)
+  sessionType     String    @default("guest") @map("session_type") @db.VarChar(20)
+  title           String?   @db.VarChar(200)
+  messageCount    Int       @default(0) @map("message_count")
+  lastActivityAt  DateTime  @default(now()) @map("last_activity_at") @db.Timestamp(6)
+  expiresAt       DateTime? @map("expires_at") @db.Timestamp(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   messages    AgentMessage[]
 
   @@index([sessionId], map: "idx_agent_sessions_session_id")
+  @@index([guestId], map: "idx_agent_sessions_guest_id")
+  @@index([userId], map: "idx_agent_sessions_user_id")
   @@map("agent_sessions")
 }
 
 /// 消息表（对话历史）
 model AgentMessage {
-  id          String    @id @db.VarChar(50)
-  sessionId   String    @map("session_id") @db.VarChar(50)
-  role        String    @db.VarChar(50)
-  content     String?
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  id            String    @id @db.VarChar(50)
+  sessionId     String    @map("session_id") @db.VarChar(50)
+  role          String    @db.VarChar(50)
+  content       String?   @db.Text
+  contentBlocks Json?     @map("content_blocks")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
 
-  session     AgentSession @relation(fields: [sessionId], references: [id])
+  session     AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   toolCalls   AgentToolCall[]
 
   @@index([sessionId], map: "idx_agent_messages_session_id")
@@ -51,4 +60,31 @@ model AgentToolCall {
 
   @@index([messageId], map: "idx_agent_tool_calls_message_id")
   @@map("agent_tool_calls")
+}
+
+/// 知识文档表
+model Document {
+  id         Int             @id @default(autoincrement())
+  title      String          @db.VarChar(200)
+  content    String          @db.Text
+  category   String          @db.VarChar(50) // overview | structure | art | history
+  metadata   Json?           // {source, keywords, imageUrl, order}
+  createdAt  DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  chunks     DocumentChunk[]
+
+  @@map("documents")
+}
+
+/// 文档分段表（pgvector 向量存储）
+model DocumentChunk {
+  id          Int      @id @default(autoincrement())
+  documentId  Int      @map("document_id")
+  chunkIndex  Int      @map("chunk_index")
+  chunkText   String   @map("chunk_text") @db.Text
+  embedding   String?  @map("embedding") @db.Text // pgvector 向量，格式: [0.1,0.2,...]
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId], map: "idx_document_chunks_document_id")
+  @@map("document_chunks")
 }
