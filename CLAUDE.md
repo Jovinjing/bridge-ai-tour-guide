@@ -104,10 +104,10 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 0-2 已完成 ✅ → Phase 3 待开工 |
-| **当前任务** | Phase 3 — 前端适配 |
-| **下一步** | Phase 3.1 — 前端项目 TS 化 |
-| **最新 commit** | 待提交 — feat: Phase 2 Agent 服务完成 |
+| **阶段** | Phase 0-2 已完成 ✅ → Phase 3 🚧 |
+| **当前任务** | Phase 3 — 前端适配（新建 `frontend/` Vite + React 19 + TS） |
+| **下一步** | Step 1 — 项目初始化 + 类型定义 + 资源迁移 |
+| **最新 commit** | `c396cbc` — fix: splitIntoChunks 死循环修复 + Phase 2 单元测试 (106 tests) |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
@@ -134,6 +134,16 @@ feature/<功能名> ──→ 用户检查 ──→ main
 - ✅ 2.6 会话管理（CRUD + 消息持久化）
 - ✅ 2.7 游客模式（UUID session + 10 轮限制 + 24h 过期 + 升级绑定）
 - ✅ 2.8 JWT 公钥验证中间件（Phase 0.5 已完成）
+- ✅ 2.9 106 个单元测试（12 个测试文件）全部通过
+- ✅ 2.10 splitIntoChunks 死循环 Bug 修复
+
+### Phase 3 规划（🚧 进行中）
+- 🚧 3.1 项目初始化：新建 `frontend/` Vite + React 19 + TypeScript
+- ⬜ 3.2 API 层重写：`api/client.ts` + `api/index.ts` + `api/sse.ts` POST SSE
+- ⬜ 3.3 基础组件：ErrorBoundary, Icon, MarkdownRenderer, PanoramaViewer, ContentBlocks
+- ⬜ 3.4 页面组件：App.tsx + 8 个页面（含 AiChatPanel POST SSE 重构）
+- ⬜ 3.5 新功能：游客模式 UI, 代码高亮, 文件上传 UI
+- 架构变更：EventSource(GET) → fetch ReadableStream(POST) | username/pwd → 验证码登录 | `res.success` → `{code,message,data}`
 
 ---
 

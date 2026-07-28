@@ -55,8 +55,12 @@
 | 2.6 | 会话管理（CRUD + 记忆持久化） | session CRUD | ✅ |
 | 2.7 | 游客模式（限轮次 + 24h 过期 + 升级绑定） | 游客流程 | ✅ |
 | 2.8 | JWT 公钥验证中间件 | Agent 鉴权 | ✅（Phase 0.5 已完成） |
+| 2.9 | Phase 2 单元测试（106 tests） | 12 文件，全降级路径覆盖 | ✅ |
 
 **预计**：6-8 天
+
+**Bug 修复**：
+- `splitIntoChunks` 死循环：短文本时 `chunkText.length <= overlap` 导致 `start` 不前进 → 已修复
 
 ---
 
@@ -102,12 +106,12 @@
 
 ## 当前任务指针
 
-→ **Phase 3.1**：前端项目 TS 化
+→ **Phase 3 🚧**：前端适配
 
 ```
-上次完成：Phase 2 — Agent 服务（全部 8 个子任务）
-当前：    Phase 3 — 前端适配
-下一步：  Phase 3.1 — 前端项目 TS 化（App.jsx → App.tsx 渐进迁移）
+上次完成：Phase 2 — Agent 服务（全部 8 个子任务 + 106 个单元测试）
+当前：    Phase 3 — 前端适配（新建 frontend/ Vite + React 19 + TS）
+下一步：  Step 1 — 项目初始化 + 类型定义 + 资源迁移
 ```
 
 ---
