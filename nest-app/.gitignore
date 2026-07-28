@@ -6,3 +6,6 @@ dist
 
 # RSA 密钥（敏感信息，不要提交）
 .keys/
+
+# 用户上传文件
+uploads/
