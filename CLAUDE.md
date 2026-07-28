@@ -104,10 +104,10 @@ feature/<功能名> ──→ 用户检查 ──→ main
 
 | 项 | 值 |
 |----|-----|
-| **阶段** | Phase 0 — 项目初始化（90% 完成） |
-| **当前任务** | Phase 1 — Agent SSE 流式服务 |
-| **下一步** | Agent Chat SSE 端点 + LangChain 集成 |
-| **最新 commit** | `462c9c9` — feat: 添加 Nginx 反向代理配置 |
+| **阶段** | Phase 0 已完成 ✅ → Phase 1 进行中 |
+| **当前任务** | Phase 1 — NestJS 业务 CRUD |
+| **下一步** | 完善认证模块（验证码流程） |
+| **最新 commit** | 待提交 — feat: RSA 密钥对 + JWT 联调 |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 
@@ -119,6 +119,7 @@ feature/<功能名> ──→ 用户检查 ──→ main
 - ✅ Cultural API（列表 + 详情，含分页）
 - ✅ Nginx 反向代理配置
 - ✅ 健康检查端点 (/health)
+- ✅ RSA 密钥对生成 + JWT 签发/验证联调（公钥签名 + 私钥验证）
 
 ---
 

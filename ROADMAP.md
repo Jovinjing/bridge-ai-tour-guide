@@ -1,21 +1,21 @@
 # 赵州桥AI科普导游系统 — 实施路线图
 
-> 日期: 2026-07-27  
-> 状态: 设计完成，Phase 0 待开工
+> 日期: 2026-07-28  
+> 状态: Phase 0 已完成 ✅，进入 Phase 1
 
 ---
 
-## Phase 0：项目初始化
+## Phase 0：项目初始化 ✅
 
 **目标**：跑通开发环境，两个服务能启动、能通信。
 
 | # | 任务 | 产出 | 状态 |
 |---|------|------|------|
-| 0.1 | NestJS 脚手架 + Prisma + public schema 迁移 | `nest-app/` 可启动 | ⏳ |
-| 0.2 | Express Agent 服务骨架 + Prisma + agent schema 迁移 | `agent-service/` 可启动 | ⏳ |
-| 0.3 | PostgreSQL Docker + pgvector 扩展 + 初始数据导入 | 数据库就绪 | ⏳ |
-| 0.4 | Nginx 开发配置 + Vite proxy 对接 | 前端能调通后端 | ⏳ |
-| 0.5 | RSA 密钥对生成 + JWT 签发/验证联调 | Nest → Agent JWT 互通 | ⏳ |
+| 0.1 | NestJS 脚手架 + Prisma + public schema 迁移 | `nest-app/` 可启动 | ✅ |
+| 0.2 | Express Agent 服务骨架 + Prisma + agent schema 迁移 | `agent-service/` 可启动 | ✅ |
+| 0.3 | PostgreSQL Docker + pgvector 扩展 + 初始数据导入 | 数据库就绪 | ✅ |
+| 0.4 | Nginx 开发配置 + Vite proxy 对接 | 前端能调通后端 | ✅ |
+| 0.5 | RSA 密钥对生成 + JWT 签发/验证联调 | Nest → Agent JWT 互通 | ✅ |
 
 **预计**：2 天
 
@@ -102,12 +102,12 @@
 
 ## 当前任务指针
 
-→ **Phase 0.1**：NestJS 脚手架搭建
+→ **Phase 1.1**：认证模块（验证码 + 登录 + JWT）
 
 ```
-上次完成：Phase 全部未开始
-当前：    Phase 0 — 项目初始化
-下一步：  Phase 0.1 — nest new + Prisma + public schema
+上次完成：Phase 0 — RSA 密钥对 + JWT 联调
+当前：    Phase 1 — NestJS 业务 CRUD
+下一步：  Phase 1.1 — POST /api/auth/* 认证模块
 ```
 
 ---
