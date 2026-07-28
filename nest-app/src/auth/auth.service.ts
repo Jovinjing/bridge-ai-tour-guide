@@ -47,4 +47,24 @@ export class AuthService {
     const token = this.jwtService.sign({ sub: user.id, phone: user.phone });
     return { token, user: { id: user.id, phone: user.phone, nickname: user.nickname } };
   }
+
+  /** 验证码登录：无需密码，仅需手机号 */
+  async loginByCode(phone: string) {
+    let user = await this.prisma.user.findUnique({
+      where: { phone },
+    });
+
+    // 新用户：自动注册
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          phone,
+          nickname: `用户${phone.slice(-4)}`,
+        },
+      });
+    }
+
+    const token = this.jwtService.sign({ sub: user.id, phone: user.phone });
+    return { token, user: { id: user.id, phone: user.phone, nickname: user.nickname } };
+  }
 }

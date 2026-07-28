@@ -106,8 +106,8 @@ feature/<功能名> ──→ 用户检查 ──→ main
 |----|-----|
 | **阶段** | Phase 0 已完成 ✅ → Phase 1 进行中 |
 | **当前任务** | Phase 1 — NestJS 业务 CRUD |
-| **下一步** | 完善认证模块（验证码流程） |
-| **最新 commit** | 待提交 — feat: RSA 密钥对 + JWT 联调 |
+| **下一步** | Phase 1.2 — 用户模块（GET/PATCH /api/auth/me） |
+| **最新 commit** | 待提交 — feat: 验证码服务 + JWT 改造 |
 | **当前分支** | `feature/nestjs-init` |
 | **设计文档** | DESIGN.md ✅ / API.md ✅ / ROADMAP.md ✅ |
 

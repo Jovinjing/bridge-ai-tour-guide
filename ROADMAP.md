@@ -27,12 +27,12 @@
 
 | # | 任务 | API | 状态 |
 |---|------|-----|------|
-| 1.1 | 认证模块（验证码 + 登录 + JWT） | `POST /api/auth/*` | ⏳ |
+| 1.1 | 认证模块（验证码 + 登录 + JWT） | `POST /api/auth/*` | ✅ |
 | 1.2 | 用户模块（资料 + 头像上传） | `GET/PATCH /api/auth/me` | ⏳ |
 | 1.3 | 商品模块（列表 + 详情） | `GET /api/goods/*` | ⏳ |
 | 1.4 | 门票模块（列表 + 热力图） | `GET /api/tickets/*` | ⏳ |
 | 1.5 | 订单模块（创建 + 支付 + 热力图更新） | `POST/GET /api/orders/*` | ⏳ |
-| 1.6 | 文化内容模块（列表 + 详情） | `GET /api/cultural/*` | ⏳ |
+| 1.6 | 文化内容模块（列表 + 详情） | `GET /api/cultural/*` | ✅ |
 | 1.7 | 收藏模块 | `POST/GET/DELETE /api/favorites/*` | ⏳ |
 | 1.8 | 会话代理模块（Nest → Agent HTTP 转发） | `/api/sessions/*` | ⏳ |
 | 1.9 | 文件上传模块 | `POST /api/upload` | ⏳ |
@@ -102,12 +102,12 @@
 
 ## 当前任务指针
 
-→ **Phase 1.1**：认证模块（验证码 + 登录 + JWT）
+→ **Phase 1.2**：用户模块（资料 + 头像上传）
 
 ```
-上次完成：Phase 0 — RSA 密钥对 + JWT 联调
+上次完成：Phase 1.1 — 认证模块（验证码 + 密码登录 + 验证码登录 + JWT）
 当前：    Phase 1 — NestJS 业务 CRUD
-下一步：  Phase 1.1 — POST /api/auth/* 认证模块
+下一步：  Phase 1.2 — GET/PATCH /api/auth/me 用户资料模块
 ```
 
 ---

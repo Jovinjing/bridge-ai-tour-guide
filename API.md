@@ -98,7 +98,7 @@ POST /api/auth/send-code
 }
 ```
 
-### 2.2 登录
+### 2.2 密码登录
 
 ```
 POST /api/auth/login
@@ -108,10 +108,8 @@ POST /api/auth/login
 ```json
 {
   "phone": "13800138000",
-  "code": "123456"
+  "password": "mypassword"
 }
-// 或邮箱登录:
-// { "email": "user@example.com", "password": "xxx" }
 ```
 
 响应：
@@ -125,12 +123,28 @@ POST /api/auth/login
       "id": 118,
       "nickname": "晓歌",
       "avatarUrl": "/user-service/avatars/abc.jpg",
-      "phone": "138****0000",
+      "phone": "13800138000",
       "email": null
     }
   }
 }
 ```
+
+### 2.2b 验证码登录
+
+```
+POST /api/auth/login-by-code
+```
+
+请求：
+```json
+{
+  "phone": "13800138000",
+  "code": "123456"
+}
+```
+
+响应：同 2.2 密码登录（新用户自动注册）
 
 ### 2.3 获取当前用户 🔒
 
