@@ -77,9 +77,37 @@ beforeEach(() => {
 // 健康检查
 // =====================================================================
 describe('健康检查', () => {
-  it('GET /health', () => {
-    checkHealth();
-    expect(get).toHaveBeenCalledWith('/health');
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('返回 true 当后端响应 status=ok', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ status: 'ok', timestamp: new Date().toISOString() }),
+    });
+    await expect(checkHealth()).resolves.toBe(true);
+  });
+
+  it('返回 false 当 HTTP 状态异常', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 503,
+    });
+    await expect(checkHealth()).resolves.toBe(false);
+  });
+
+  it('返回 false 当网络异常', async () => {
+    global.fetch = vi.fn().mockRejectedValue(new Error('network error'));
+    await expect(checkHealth()).resolves.toBe(false);
+  });
+
+  it('返回 false 当响应格式不匹配', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ foo: 'bar' }),
+    });
+    await expect(checkHealth()).resolves.toBe(false);
   });
 });
 

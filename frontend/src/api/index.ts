@@ -19,8 +19,21 @@ export { sendChatMessage, createSseConnection } from './sse';
 
 // ─── ===== 健康检查 ===== ─────────────────────────────────────────
 
-export function checkHealth(): Promise<HealthStatus> {
-  return get('/health');
+/**
+ * 健康检查
+ *
+ * 注意：NestJS /health 返回 {status, timestamp}，不是标准的 {code,message,data} 格式，
+ * 所以直接用 fetch 而非 get() 以避免 ApiResponse 解包失败。
+ */
+export async function checkHealth(): Promise<boolean> {
+  try {
+    const resp = await fetch('/health', { signal: AbortSignal.timeout(5000) });
+    if (!resp.ok) return false;
+    const data = await resp.json();
+    return data.status === 'ok';
+  } catch {
+    return false;
+  }
 }
 
 // ─── ===== 认证模块 ===== ─────────────────────────────────────────
