@@ -93,7 +93,24 @@ async function request<T = unknown>(
     return { code: 0, message: 'success', data: null } as unknown as T;
   }
 
-  const json: ApiResponse<T> = await resp.json();
+  // HTTP 错误（NestJS 返回 { statusCode, message, error }）
+  if (!resp.ok) {
+    let errorBody: Record<string, unknown> = {};
+    try { errorBody = await resp.json(); } catch { /* 非 JSON 响应体 */ }
+    throw new ApiError(
+      (errorBody.statusCode as number) ?? 5000,
+      (errorBody.message as string) ?? (errorBody.error as string) ?? `HTTP ${resp.status}`,
+    );
+  }
+
+  const json = await resp.json();
+
+  // 兼容两种响应格式：
+  //   1. NestJS 裸数据格式：{ items, total, ... }（无 code 字段）
+  //   2. 标准 { code, message, data } 包装格式
+  if (typeof json.code === 'undefined') {
+    return json as T;
+  }
 
   if (json.code !== 0) {
     if (json.code === 1002 && !skipAuthRedirect) {

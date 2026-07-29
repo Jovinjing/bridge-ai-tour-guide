@@ -213,6 +213,38 @@ describe('响应解包', () => {
     await expect(get('/api/error')).rejects.toThrow(ApiError);
     await expect(get('/api/error')).rejects.toThrow('HTTP 500');
   });
+
+  // ─── NestJS 裸数据格式 ──────────────────────────────────
+
+  it('NestJS 裸数据（无 code）直接返回', async () => {
+    const bare = { items: [{ id: 1, name: '商品1' }], total: 1 };
+    const fetch = mockFetch(200, bare);
+    vi.stubGlobal('fetch', fetch);
+    const result = await get<typeof bare>('/api/goods');
+    expect(result).toEqual(bare);
+  });
+
+  it('NestJS 裸数组直接返回', async () => {
+    const bare = [{ id: 1 }, { id: 2 }];
+    const fetch = mockFetch(200, bare);
+    vi.stubGlobal('fetch', fetch);
+    const result = await get<typeof bare>('/api/list');
+    expect(result).toEqual(bare);
+  });
+
+  it('NestJS HTTP 错误（{ statusCode, message }）抛出 ApiError', async () => {
+    const fetch = mockFetch(401, { statusCode: 401, message: 'Unauthorized' });
+    vi.stubGlobal('fetch', fetch);
+    await expect(get('/api/auth/me')).rejects.toThrow(ApiError);
+    await expect(get('/api/auth/me')).rejects.toThrow('Unauthorized');
+  });
+
+  it('NestJS HTTP 错误（{ statusCode, error }）抛出 ApiError', async () => {
+    const fetch = mockFetch(404, { statusCode: 404, error: 'Not Found' });
+    vi.stubGlobal('fetch', fetch);
+    await expect(get('/api/not-found')).rejects.toThrow(ApiError);
+    await expect(get('/api/not-found')).rejects.toThrow('Not Found');
+  });
 });
 
 // =====================================================================
