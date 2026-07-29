@@ -21,7 +21,7 @@ import './App.css';
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isFullPage = ['/home', '/store', '/auth', '/profile'].includes(location.pathname) || location.pathname.startsWith('/product');
+  const isFullPage = ['/', '/store', '/auth', '/profile'].includes(location.pathname) || location.pathname.startsWith('/product');
 
   const [sessionId] = useState(() => getSessionId());
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!getToken());
@@ -42,6 +42,16 @@ function AppContent() {
     return () => clearInterval(id);
   }, []);
 
+  // 全局 token 过期处理
+  useEffect(() => {
+    const handler = () => {
+      setIsLoggedIn(false);
+      navigate('/auth');
+    };
+    window.addEventListener('auth:unauthorized', handler);
+    return () => window.removeEventListener('auth:unauthorized', handler);
+  }, [navigate]);
+
   const handleLogin = useCallback((token: string) => {
     setToken(token);
     setIsLoggedIn(true);
@@ -55,8 +65,6 @@ function AppContent() {
 
   const cartCount = 0; // 购物车功能迁移到后端 API
 
-  const isHome = location.pathname === '/';
-
   return (
     <div className={`app ${isFullPage ? 'app-full' : ''}`}>
       {/* 离线横幅 */}
@@ -66,16 +74,14 @@ function AppContent() {
         </div>
       )}
 
-      {/* 导航栏：首页不显示 */}
-      {!isHome && (
-        <Navbar
-          currentPath={location.pathname}
-          isLoggedIn={isLoggedIn}
-          cartCount={cartCount}
-          navigate={navigate}
-          onLogout={handleLogout}
-        />
-      )}
+      {/* 导航栏：所有页面都显示 */}
+      <Navbar
+        currentPath={location.pathname}
+        isLoggedIn={isLoggedIn}
+        cartCount={cartCount}
+        navigate={navigate}
+        onLogout={handleLogout}
+      />
 
       <main className={`app-main ${isFullPage ? 'app-main-full' : ''}`}>
         <ErrorBoundary>
@@ -93,13 +99,11 @@ function AppContent() {
       </main>
 
       {/* 页脚 */}
-      {!isHome && (
-        <footer className="app-footer">
-          <span>赵州桥科普 · AI 导游 v3.0</span>
-          <span className="footer-sep">|</span>
-          <span>LangChain.js + DeepSeek</span>
-        </footer>
-      )}
+      <footer className="app-footer">
+        <span>赵州桥科普 · AI 导游 v3.0</span>
+        <span className="footer-sep">|</span>
+        <span>LangChain.js + DeepSeek</span>
+      </footer>
     </div>
   );
 }

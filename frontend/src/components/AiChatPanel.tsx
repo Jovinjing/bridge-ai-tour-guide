@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { sendChatMessage } from '../api';
-import { getSessionId } from '../api/client';
 import Icon from './Icon';
 import MarkdownRenderer from './MarkdownRenderer';
 import ContentBlocks from './ContentBlocks';
@@ -168,14 +167,19 @@ export default function AiChatPanel({ sessionId, initialComponent, componentKey,
     abortRef.current = controller;
   }, [sessionId, ttsEnabled, speakText]);
 
+  // 用 ref 保持最新 sendQuestion，避免 useEffect 闭包过期
+  const sendQuestionRef = useRef(sendQuestion);
+  sendQuestionRef.current = sendQuestion;
+
   // componentKey 变化 → 自动提问
   useEffect(() => {
     if (initialComponent && componentKey && componentKey > 0) {
       abortRef.current?.abort();
       setIsStreaming(false);
-      setTimeout(() => {
-        sendQuestion(`请介绍一下赵州桥的【${initialComponent}】部分`);
+      const timerId = setTimeout(() => {
+        sendQuestionRef.current(`请介绍一下赵州桥的【${initialComponent}】部分`);
       }, 50);
+      return () => clearTimeout(timerId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentKey]);

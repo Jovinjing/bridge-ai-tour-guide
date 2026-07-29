@@ -98,7 +98,7 @@ async function request<T = unknown>(
   if (json.code !== 0) {
     if (json.code === 1002 && !skipAuthRedirect) {
       clearToken();
-      // 不跳转，由组件处理
+      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
     throw new ApiError(json.code, json.message);
   }
