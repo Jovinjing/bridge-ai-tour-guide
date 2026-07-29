@@ -88,6 +88,12 @@ body.ai-layout {
 }
 
 /* ---------- 全景区域 ---------- */
+.ai-panorama-page {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 .panorama-section {
   flex: 1;
   position: relative;
