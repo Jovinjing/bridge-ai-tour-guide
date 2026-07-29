@@ -77,9 +77,9 @@ beforeEach(() => {
 // 健康检查
 // =====================================================================
 describe('健康检查', () => {
-  it('GET /api/health', () => {
+  it('GET /health', () => {
     checkHealth();
-    expect(get).toHaveBeenCalledWith('/api/health');
+    expect(get).toHaveBeenCalledWith('/health');
   });
 });
 

@@ -83,12 +83,14 @@ export default function AiPanoramaPage({ sessionId, user }: Props) {
 
       {/* AI 聊天面板侧栏 */}
       <aside className={`chat-section ${chatVisible ? 'chat-visible' : 'chat-hidden'}`}>
-        <AiChatPanel
-          sessionId={sessionId}
-          initialComponent={chatComponent?.name}
-          componentKey={chatKey}
-          user={user}
-        />
+        {chatVisible && (
+          <AiChatPanel
+            sessionId={sessionId}
+            initialComponent={chatComponent?.name}
+            componentKey={chatKey}
+            user={user}
+          />
+        )}
       </aside>
     </div>
   );

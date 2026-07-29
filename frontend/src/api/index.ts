@@ -20,7 +20,7 @@ export { sendChatMessage, createSseConnection } from './sse';
 // ─── ===== 健康检查 ===== ─────────────────────────────────────────
 
 export function checkHealth(): Promise<HealthStatus> {
-  return get('/api/health');
+  return get('/health');
 }
 
 // ─── ===== 认证模块 ===== ─────────────────────────────────────────
