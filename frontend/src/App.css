@@ -2127,6 +2127,49 @@ body.ai-layout {
   font-size: 13px;
 }
 
+/* 图形验证码行 */
+.auth-captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-captcha-input {
+  width: 120px !important;
+  padding: 11px 14px !important;
+  border-radius: 8px;
+  border: 1px solid var(--brand-200);
+  font-size: 16px !important;
+  font-family: 'Courier New', monospace !important;
+  letter-spacing: 3px;
+  outline: none;
+  background: var(--brand-50);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  text-transform: lowercase;
+}
+
+.auth-captcha-input:focus {
+  border-color: var(--brand-600);
+}
+
+.auth-captcha-input.captcha-ok {
+  border-color: #2E7D32;
+  background: #f0faf0;
+}
+
+.auth-captcha-input.captcha-err {
+  border-color: #D32F2F;
+  background: #fef0f0;
+}
+
+.auth-captcha-hint {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 .auth-forgot {
   display: flex;
   justify-content: flex-end;

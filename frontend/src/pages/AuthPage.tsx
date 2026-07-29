@@ -1,11 +1,16 @@
 /**
- * 登录/注册页 — 手机号 + 验证码登录
+ * 登录/注册页 — 手机号 + 图形验证码 + 短信验证码
  *
- * 替换旧版 username/password 登录和微信 OAuth
+ * 验证码流程：
+ *   1. 用户输入手机号
+ *   2. 用户识别图形验证码并输入
+ *   3. 图形验证码通过后，方可点击"获取短信验证码"
+ *   4. 输入短信验证码完成登录
  */
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../components/Icon';
+import CaptchaCanvas, { type CaptchaRef } from '../components/CaptchaCanvas';
 import { sendCode, loginByCode } from '../api';
 
 interface Props {
@@ -14,16 +19,40 @@ interface Props {
 
 export default function AuthPage({ onLogin }: Props) {
   const navigate = useNavigate();
+  const captchaRef = useRef<CaptchaRef>(null);
+
   const [phone, setPhone] = useState('');
-  const [code, setCode] = useState('');
+  // 图形验证码
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaPassed, setCaptchaPassed] = useState(false);
+  // 短信验证码
+  const [smsCode, setSmsCode] = useState('');
   const [codeSent, setCodeSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  /** 图形验证码生成/刷新时 */
+  const handleCaptchaChange = () => {
+    setCaptchaInput('');
+    setCaptchaPassed(false);
+  };
+
+  /** 图形验证码输入变化 */
+  const handleCaptchaInput = (value: string) => {
+    // 只允许 4 位小写字母/数字
+    const cleaned = value.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 4);
+    setCaptchaInput(cleaned);
+    setCaptchaPassed(cleaned.length === 4 && cleaned === (captchaRef.current?.currentCode ?? ''));
+  };
+
   const handleSendCode = async () => {
     if (!phone || phone.length < 11) {
       setError('请输入正确的手机号');
+      return;
+    }
+    if (!captchaPassed) {
+      setError('请先输入正确的图形验证码');
       return;
     }
     setError('');
@@ -47,11 +76,11 @@ export default function AuthPage({ onLogin }: Props) {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone || !code) return;
+    if (!phone || !smsCode) return;
     setError('');
     setLoading(true);
     try {
-      const res = await loginByCode(phone, code);
+      const res = await loginByCode(phone, smsCode);
       onLogin(res.token);
       navigate('/');
     } catch (err: unknown) {
@@ -104,28 +133,52 @@ export default function AuthPage({ onLogin }: Props) {
                 />
               </div>
 
+              {/* 图形验证码 */}
               <div className="auth-field">
-                <label>验证码</label>
+                <label>图形验证码</label>
+                <div className="auth-captcha-row">
+                  <CaptchaCanvas ref={captchaRef} onChange={handleCaptchaChange} />
+                  <input
+                    type="text"
+                    value={captchaInput}
+                    onChange={e => handleCaptchaInput(e.target.value)}
+                    placeholder="输入验证码"
+                    maxLength={4}
+                    className={`auth-captcha-input ${captchaPassed ? 'captcha-ok' : captchaInput.length > 0 && !captchaPassed ? 'captcha-err' : ''}`}
+                  />
+                </div>
+                <p className="auth-captcha-hint">点击验证码图片可刷新</p>
+              </div>
+
+              {/* 手机验证码 — 需要先通过图形验证码 */}
+              <div className="auth-field">
+                <label>短信验证码</label>
                 <div className="auth-code-row">
                   <input
                     type="text"
-                    value={code}
-                    onChange={e => setCode(e.target.value)}
-                    placeholder="6 位验证码"
+                    value={smsCode}
+                    onChange={e => setSmsCode(e.target.value)}
+                    placeholder="6 位短信验证码"
                     maxLength={6}
                   />
                   <button
                     type="button"
                     className="auth-send-code-btn"
                     onClick={handleSendCode}
-                    disabled={countdown > 0}
+                    disabled={countdown > 0 || !captchaPassed || phone.length < 11}
                   >
-                    {countdown > 0 ? `${countdown}s` : codeSent ? '重新发送' : '获取验证码'}
+                    {!captchaPassed
+                      ? '请完成验证'
+                      : countdown > 0
+                        ? `${countdown}s`
+                        : codeSent
+                          ? '重新发送'
+                          : '获取验证码'}
                   </button>
                 </div>
               </div>
 
-              <button type="submit" className="auth-submit" disabled={loading || !phone || !code}>
+              <button type="submit" className="auth-submit" disabled={loading || !phone || !smsCode}>
                 {loading ? '登录中...' : '登录 / 注册'}
               </button>
             </form>
