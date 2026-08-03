@@ -47,6 +47,9 @@ const CaptchaCanvas = forwardRef<CaptchaRef, Props>(
   ({ onChange, width = 120, height = 44 }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const codeRef = useRef<string>('');
+    // 用 ref 保存最新 onChange，避免父组件每次渲染传新函数导致 refresh 引用变化
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
 
     const draw = useCallback((code: string) => {
       const canvas = canvasRef.current;
@@ -127,8 +130,8 @@ const CaptchaCanvas = forwardRef<CaptchaRef, Props>(
       const code = generateCode();
       codeRef.current = code;
       draw(code);
-      onChange?.(code);
-    }, [draw, onChange]);
+      onChangeRef.current?.(code);
+    }, [draw]);
 
     // 首次挂载生成
     useEffect(() => {

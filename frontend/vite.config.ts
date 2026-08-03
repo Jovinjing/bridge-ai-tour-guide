@@ -17,11 +17,11 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/agent/chat': {
-        target: 'http://localhost:3003',
+        target: 'http://localhost:3001',
         changeOrigin: true,
       },
       '/agent/sessions': {
-        target: 'http://localhost:3003',
+        target: 'http://localhost:3001',
         changeOrigin: true,
       },
       '/health': {

@@ -123,7 +123,13 @@ function parseSseBlock(block: string, callbacks: SseCallbacks): void {
       break;
 
     case 'token':
-      callbacks.onToken?.(dataStr);
+      try {
+        const data = JSON.parse(dataStr) as { content?: string };
+        callbacks.onToken?.(data.content ?? '');
+      } catch {
+        // 非 JSON 的纯文本 token 直接透传
+        callbacks.onToken?.(dataStr);
+      }
       break;
 
     case 'done':
