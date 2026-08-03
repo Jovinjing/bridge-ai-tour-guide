@@ -7,7 +7,7 @@ import type { AxiosResponse } from 'axios';
 @Injectable()
 export class SessionsService {
   private readonly logger = new Logger(SessionsService.name);
-  private readonly AGENT_URL = 'http://localhost:3001';
+  private readonly AGENT_URL = process.env.AGENT_SERVICE_URL ?? 'http://localhost:3001';
 
   constructor(private readonly httpService: HttpService) {}
 

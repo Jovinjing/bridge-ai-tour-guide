@@ -1,24 +1,103 @@
-version: '3.8'
+# ============================================
+# 赵州桥AI科普导游系统 — 生产环境 Docker Compose
+# ============================================
+# 启动:  docker compose --env-file .env up -d --build
+# 查看:  docker compose logs -f
+# 停止:  docker compose down
+# ============================================
 
 services:
+  # ---- PostgreSQL + pgvector ----
   postgres:
     image: pgvector/pgvector:pg16
-    container_name: zhaozhou_bridge_db
+    container_name: zhaozhou-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: zhaozhou_bridge
-      POSTGRES_HOST_AUTH_METHOD: md5
-    ports:
-      - "5433:5432"
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-zhaozhou_bridge}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"  # 本地开发直连
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # ---- NestJS 后端 (API + Auth + CRUD) ----
+  nestjs:
+    build:
+      context: ./nest-app
+      dockerfile: Dockerfile
+    container_name: zhaozhou-api
+    environment:
+      PORT: "3002"
+      DATABASE_URL: "postgresql://${DB_USER:-postgres}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-zhaozhou_bridge}?schema=public"
+      JWT_SECRET: ${JWT_SECRET}
+      AGENT_SERVICE_URL: "http://agent:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./.keys:/app/.keys:ro
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # ---- Agent 服务 (AI 对话 + SSE) ----
+  agent:
+    build:
+      context: ./agent-service
+      dockerfile: Dockerfile
+    container_name: zhaozhou-agent
+    environment:
+      PORT: "3001"
+      DATABASE_URL: "postgresql://${DB_USER:-postgres}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-zhaozhou_bridge}?schema=agent"
+      JWT_PRIVATE_KEY_PATH: "/app/.keys/private.key"
+      NODE_ENV: "production"
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://open.bigmodel.cn/api/paas/v4}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-glm-4-flash}
+      # 备用模型（主模型不稳定时自动切换：DeepSeek 官方 API）
+      DEEPSEEK_FALLBACK_API_KEY: ${DEEPSEEK_FALLBACK_API_KEY}
+      DEEPSEEK_FALLBACK_BASE_URL: ${DEEPSEEK_FALLBACK_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_FALLBACK_MODEL: ${DEEPSEEK_FALLBACK_MODEL:-deepseek-chat}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.siliconflow.cn/v1}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-BAAI/bge-m3}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS:-1024}
+    volumes:
+      - ./.keys:/app/.keys:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # ---- Nginx (前端静态 + 反向代理) ----
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: zhaozhou-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - nestjs
+      - agent
+    restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

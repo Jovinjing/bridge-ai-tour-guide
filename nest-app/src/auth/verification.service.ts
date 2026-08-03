@@ -1,4 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable, Logger, UnauthorizedException, BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as crypto from 'crypto';
 
@@ -35,7 +37,7 @@ export class VerificationService {
       const secondsSince = (Date.now() - last.createdAt!.getTime()) / 1000;
       if (secondsSince < this.RATE_LIMIT_SECONDS) {
         const waitSeconds = Math.ceil(this.RATE_LIMIT_SECONDS - secondsSince);
-        throw new Error(`发送过于频繁，请 ${waitSeconds} 秒后再试`);
+        throw new BadRequestException(`发送过于频繁，请 ${waitSeconds} 秒后再试`);
       }
     }
 
@@ -81,7 +83,7 @@ export class VerificationService {
     });
 
     if (!record) {
-      throw new Error('验证码无效或已过期');
+      throw new UnauthorizedException('验证码无效或已过期');
     }
 
     // 删除已使用的验证码，防止重复使用

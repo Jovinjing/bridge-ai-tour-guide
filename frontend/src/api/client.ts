@@ -7,7 +7,7 @@
  * - 401 自动跳登录
  * - 错误统一抛出
  */
-import type { ApiResponse } from '../types';
+// ApiResponse type used for response typing in generic functions below
 
 const BASE = '';
 const TOKEN_KEY = 'auth_token';

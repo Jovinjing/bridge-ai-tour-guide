@@ -21,11 +21,15 @@ export interface SearchResult {
 
 /**
  * 向量相似度检索
+ *
+ * 阈值说明：0.7 适用于 OpenAI text-embedding-3-small；bge-m3 的中文
+ * 语义匹配分数整体偏低（相关文档常见 0.55-0.8），默认用 0.55，
+ * 可通过 SEARCH_THRESHOLD 环境变量调整。
  */
 export async function searchSimilar(
   queryEmbedding: number[],
   topK: number = 5,
-  threshold: number = 0.7,
+  threshold: number = Number(process.env.SEARCH_THRESHOLD ?? 0.55),
 ): Promise<SearchResult[]> {
   const vectorStr = `[${queryEmbedding.join(',')}]`;
 
@@ -44,12 +48,12 @@ export async function searchSimilar(
         d.title AS document_title,
         dc.chunk_index,
         dc.chunk_text,
-        1 - (dc.embedding::vector <=> $1::vector) AS similarity
-      FROM document_chunks dc
-      JOIN documents d ON d.id = dc.document_id
+        1 - (dc.embedding::public.vector <=> $1::public.vector) AS similarity
+      FROM agent.document_chunks dc
+      JOIN agent.documents d ON d.id = dc.document_id
       WHERE dc.embedding IS NOT NULL
-        AND 1 - (dc.embedding::vector <=> $1::vector) > $2
-      ORDER BY dc.embedding::vector <=> $1::vector
+        AND 1 - (dc.embedding::public.vector <=> $1::public.vector) > $2
+      ORDER BY dc.embedding::public.vector <=> $1::public.vector
       LIMIT $3`,
       vectorStr,
       threshold,

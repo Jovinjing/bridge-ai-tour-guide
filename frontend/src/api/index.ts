@@ -11,7 +11,7 @@ import type {
   User, LoginResponse, Product, Ticket, TicketHeatmap,
   Order, CreateOrderRequest, Address, CreateAddressRequest,
   CartItem, Favorite, CulturalInfo, UploadResult,
-  Session, ChatMessage, PageData, HealthStatus, ProductDisplay,
+  Session, ChatMessage, PageData, ProductDisplay,
 } from '../types';
 import { matchLocalImage } from '../constants/bridgeData';
 

@@ -1,7 +1,6 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
-/// <reference types="vitest" />
 export default defineConfig({
   plugins: [react()],
   test: {
@@ -11,7 +10,7 @@ export default defineConfig({
     setupFiles: ['src/test-setup.ts'],
   },
   server: {
-    port: 5174,
+    port: 5175,
     proxy: {
       '/api': {
         target: 'http://localhost:3002',
@@ -23,10 +22,6 @@ export default defineConfig({
       },
       '/agent/sessions': {
         target: 'http://localhost:3003',
-        changeOrigin: true,
-      },
-      '/assets': {
-        target: 'http://localhost:3002',
         changeOrigin: true,
       },
       '/health': {

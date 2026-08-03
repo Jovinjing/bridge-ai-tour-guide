@@ -127,39 +127,9 @@ CREATE TRIGGER update_cultural_updated_at BEFORE UPDATE ON cultural
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ==================== agent schema ====================
-
--- 会话表
-CREATE TABLE IF NOT EXISTS agent_sessions (
-  id VARCHAR(50) PRIMARY KEY,
-  user_id VARCHAR(100),
-  session_id VARCHAR(50) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 消息表
-CREATE TABLE IF NOT EXISTS agent_messages (
-  id VARCHAR(50) PRIMARY KEY,
-  session_id VARCHAR(50) NOT NULL,
-  role VARCHAR(50) NOT NULL,
-  content TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 工具调用记录表
-CREATE TABLE IF NOT EXISTS agent_tool_calls (
-  id VARCHAR(50) PRIMARY KEY,
-  message_id VARCHAR(50) NOT NULL,
-  tool_name VARCHAR(100) NOT NULL,
-  arguments TEXT,
-  result TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 索引
-CREATE INDEX IF NOT EXISTS idx_agent_sessions_session_id ON agent_sessions(session_id);
-CREATE INDEX IF NOT EXISTS idx_agent_messages_session_id ON agent_messages(session_id);
-CREATE INDEX IF NOT EXISTS idx_agent_tool_calls_message_id ON agent_tool_calls(message_id);
+-- 注意：agent 的表（agent_sessions / agent_messages / agent_tool_calls /
+-- documents / document_chunks）由 Agent 容器启动时的 `prisma db push` 管理，
+-- 位于独立的 agent schema，与 public 隔离。请勿在此手工创建，避免结构漂移。
 
 -- 插入初始数据
 INSERT INTO goods (name, description, price, stock) VALUES

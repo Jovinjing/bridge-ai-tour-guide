@@ -1,6 +1,6 @@
 import { useRef, Suspense } from 'react';
-import { OrbitControls, Html } from '@react-three/drei';
-import { useLoader, type ThreeElement } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import HotspotMarker from './HotspotMarker';
 import HOTSPOTS, { sphericalToCartesian } from '../constants/hotspots';
@@ -33,7 +33,7 @@ function PanoramaSphere() {
  * 全景查看器
  */
 export default function PanoramaViewer({ activeHotspotId, onHotspotClick }: Props) {
-  const controlsRef = useRef<ThreeElement<'orbitControls'>>(null);
+  const controlsRef = useRef<any>(null);
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function PanoramaViewer({ activeHotspotId, onHotspotClick }: Prop
       })}
 
       <OrbitControls
-        ref={controlsRef as unknown as React.RefObject<typeof OrbitControls>}
+        ref={controlsRef}
         enableZoom={true}
         enablePan={false}
         rotateSpeed={0.4}

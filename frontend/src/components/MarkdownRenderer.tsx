@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, type JSX } from 'react';
 
 /**
  * 轻量级 Markdown 渲染组件

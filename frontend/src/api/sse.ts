@@ -4,8 +4,8 @@
  * 因为后端 SSE 端点是 POST 方法（需要传 sessionId + message），
  * 浏览器原生 EventSource 不支持 POST，故使用 fetch + ReadableStream。
  */
-import { getToken, getSessionId } from './client';
-import type { ContentBlock, SseStatusData, SseDoneData, SseErrorData } from '../types';
+import { getToken } from './client';
+import type { SseStatusData, SseDoneData, SseErrorData } from '../types';
 
 const SSE_URL = '/agent/chat';
 
@@ -155,7 +155,7 @@ export function createSseConnection(
 ): () => void {
   const controller = sendChatMessage(question, sessionId, {
     onToken: callbacks.onToken,
-    onDone: (data) => {
+    onDone: (_data) => {
       callbacks.onDone?.();
     },
     onError: (data) => {

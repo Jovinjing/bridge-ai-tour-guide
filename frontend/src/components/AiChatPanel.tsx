@@ -21,7 +21,7 @@ interface LocalMessage {
   isStreaming?: boolean;
 }
 
-export default function AiChatPanel({ sessionId, initialComponent, componentKey, onComponentClick, user }: Props) {
+export default function AiChatPanel({ sessionId, initialComponent, componentKey, onComponentClick: _onComponentClick, user }: Props) {
   const [messages, setMessages] = useState<LocalMessage[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);

@@ -2135,12 +2135,12 @@ body.ai-layout {
 }
 
 .auth-captcha-input {
-  width: 120px !important;
-  padding: 11px 14px !important;
+  flex: 1;
+  padding: 11px 14px;
   border-radius: 8px;
   border: 1px solid var(--brand-200);
-  font-size: 16px !important;
-  font-family: 'Courier New', monospace !important;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
   letter-spacing: 3px;
   outline: none;
   background: var(--brand-50);

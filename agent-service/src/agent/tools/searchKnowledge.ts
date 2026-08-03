@@ -39,8 +39,8 @@ export class SearchKnowledgeAdapter implements ToolAdapter<SearchKnowledgeParams
     // 1. 向量化查询文本
     const queryEmbedding = await embeddingModel.embedQuery(query);
 
-    // 2. pgvector 相似度检索
-    const searchResults = await searchSimilar(queryEmbedding, 5, 0.7);
+    // 2. pgvector 相似度检索（阈值由 vector.ts 默认值控制，适配 bge-m3）
+    const searchResults = await searchSimilar(queryEmbedding, 5);
 
     // 3. 格式化返回
     return {

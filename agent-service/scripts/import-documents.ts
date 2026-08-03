@@ -13,10 +13,14 @@
  */
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { splitIntoChunks } from '../src/db/vector';
 
-const prisma = new PrismaClient();
+// Prisma 7: 必须使用 driver adapter 直连
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+});
 
 // ======== 10 篇赵州桥知识文档 ========
 // 来源：旧项目 ZhaoZhouBridgeKnowledge.java
@@ -288,7 +292,7 @@ async function importDocuments() {
     configuration: {
       baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com',
     },
-    dimensions: 1536,
+    // 不传 dimensions：硅基流动 bge-m3 固定 1024 维且拒绝该参数
   });
 
   let totalChunks = 0;

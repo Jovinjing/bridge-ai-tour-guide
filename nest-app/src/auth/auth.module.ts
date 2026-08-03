@@ -22,10 +22,21 @@ function loadPublicKey(): string {
   return readFileSync(keyPath, 'utf-8');
 }
 
+/** 加载 RSA 私钥（JWT 签发用） */
+function loadPrivateKey(): string {
+  const keyPath = process.env.JWT_PRIVATE_KEY_PATH
+    ?? join(process.cwd(), '.keys', 'private.key');
+  if (!existsSync(keyPath)) {
+    throw new Error(`RSA 私钥文件不存在: ${keyPath}\n请先运行: npm run gen:keys`);
+  }
+  return readFileSync(keyPath, 'utf-8');
+}
+
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
+      privateKey: loadPrivateKey(),
       publicKey: loadPublicKey(),
       signOptions: { algorithm: 'RS256' as const, expiresIn: '7d' },
     }),
