@@ -6,8 +6,8 @@ export class CulturalService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(query: { page?: number; pageSize?: number; category?: string }) {
-    const page = query.page || 1;
-    const pageSize = query.pageSize || 10;
+    const page = Math.max(1, query.page || 1);
+    const pageSize = Math.min(50, Math.max(1, query.pageSize || 10));
     const skip = (page - 1) * pageSize;
 
     const where = query.category ? { category: query.category } : {};
@@ -37,5 +37,12 @@ export class CulturalService {
       throw new NotFoundException('文化内容不存在');
     }
     return item;
+  }
+
+  /** 查询全部文化内容（无分页） */
+  async findAllRaw() {
+    return this.prisma.cultural.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 }

@@ -14,6 +14,12 @@ export class CulturalController {
     return this.culturalService.findAll({ page, pageSize, category });
   }
 
+  /** 全部文化内容（商店页 info 标签，无分页）— 必须声明在 :id 之前 */
+  @Get('all')
+  findAllRaw() {
+    return this.culturalService.findAllRaw();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.culturalService.findOne(id);

@@ -41,7 +41,7 @@ export default function CheckoutPage() {
     try {
       const res = await createOrder({
         orderType: 'cultural',
-        itemId: product.id,
+        goodId: product.id,
         quantity,
       });
       setOrderResult(res);

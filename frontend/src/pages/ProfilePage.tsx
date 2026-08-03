@@ -114,7 +114,7 @@ function OrdersSection() {
 
   useEffect(() => {
     getOrders({ page: 1, pageSize: 50 })
-      .then(res => setOrders(res.content))
+      .then(res => setOrders(res.items))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -176,7 +176,7 @@ function TicketsSection() {
     if (!selected || !visitDate) { setMsg('请选择票种和日期'); return; }
     setLoading(true); setMsg('');
     try {
-      const res = await createOrder({ orderType: 'ticket', itemId: selected.id, quantity: qty, visitDate });
+      const res = await createOrder({ orderType: 'ticket', ticketId: selected.id, quantity: qty, visitDate });
       setMsg(`预订成功！订单号: ${res.orderNo}`); setMsgOk(true);
     } catch (err: unknown) {
       setMsg(err instanceof Error ? err.message : '预订失败'); setMsgOk(false);

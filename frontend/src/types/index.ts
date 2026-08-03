@@ -9,9 +9,10 @@ export interface ApiResponse<T = unknown> {
   data: T;
 }
 
+/** 分页响应 — 后端统一 { items, total, page, pageSize, totalPages } */
 export interface PageData<T> {
-  content: T[];
-  totalElements: number;
+  items: T[];
+  total: number;
   totalPages: number;
   page: number;
   pageSize: number;
@@ -101,9 +102,11 @@ export interface Order {
 
 export type OrderStatus = 'PENDING' | 'PAID' | 'CANCELLED' | 'REFUNDING' | 'REFUNDED';
 
+/** 下单请求 — 后端契约：goodId（文创）/ ticketId（门票）二选一 */
 export interface CreateOrderRequest {
   orderType: 'ticket' | 'cultural';
-  itemId: number;
+  goodId?: number;
+  ticketId?: number;
   quantity: number;
   visitDate?: string;
   visitTimeSlot?: string;
