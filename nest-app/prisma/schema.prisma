@@ -18,6 +18,8 @@ model User {
   updatedAt DateTime?  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   favorites Favorite[]
   orders    Order[]
+  cartItems CartItem[]
+  addresses Address[]
 
   @@index([phone], map: "idx_users_phone")
   @@map("users")
@@ -47,6 +49,7 @@ model Good {
   createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt   DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   orders      Order[]
+  cartItems   CartItem[]
 
   @@index([stock], map: "idx_goods_stock")
   @@map("goods")
@@ -116,6 +119,41 @@ model Favorite {
   @@index([userId, targetType, targetId], map: "idx_favorites_target")
   @@index([userId], map: "idx_favorites_user_id")
   @@map("favorites")
+}
+
+/// 购物车项表
+model CartItem {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  goodId    Int?      @map("good_id")
+  quantity  Int       @default(1)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  good      Good?     @relation(fields: [goodId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([userId, goodId], map: "uk_cart_user_good")
+  @@index([userId], map: "idx_cart_user_id")
+  @@map("cart_items")
+}
+
+/// 收货地址表
+model Address {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  name      String    @db.VarChar(50)
+  phone     String    @db.VarChar(20)
+  province  String    @db.VarChar(50)
+  city      String    @db.VarChar(50)
+  district  String    @db.VarChar(50)
+  detail    String    @db.VarChar(255)
+  isDefault Boolean   @default(false) @map("is_default")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId], map: "idx_addresses_user_id")
+  @@map("addresses")
 }
 
 model agent_messages {

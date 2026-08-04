@@ -13,6 +13,7 @@ export function createMockPrisma(): Record<string, any> {
   const models = [
     'user', 'verificationCode', 'good', 'ticket',
     'order', 'cultural', 'favorite',
+    'cartItem', 'address',
     'agentSessions', 'agentMessages', 'agentToolCalls',
   ];
 

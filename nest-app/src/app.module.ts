@@ -11,6 +11,8 @@ import { OrdersModule } from './orders/orders.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { UploadModule } from './upload/upload.module';
+import { CartModule } from './cart/cart.module';
+import { AddressModule } from './addresses/address.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { UploadModule } from './upload/upload.module';
     FavoritesModule,
     SessionsModule,
     UploadModule,
+    CartModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [AppService],
