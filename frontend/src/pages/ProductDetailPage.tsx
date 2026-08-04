@@ -4,7 +4,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Icon from '../components/Icon';
-import { getGoodsDetail } from '../api';
+import { getGoodsDetail, addToCart } from '../api';
+import { getToken } from '../api/client';
 import type { Product } from '../types';
 
 export default function ProductDetailPage() {
@@ -13,6 +14,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
+  const [cartErr, setCartErr] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -23,9 +25,20 @@ export default function ProductDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleAddToCart = () => {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1600);
+  const handleAddToCart = async () => {
+    if (!product) return;
+    if (!getToken()) {
+      navigate('/auth');
+      return;
+    }
+    try {
+      await addToCart(product.id);
+      setAdded(true);
+      setCartErr('');
+      setTimeout(() => setAdded(false), 1600);
+    } catch {
+      setCartErr('加入购物车失败，请稍后再试');
+    }
   };
 
   const handleBuyNow = () => {
@@ -64,6 +77,7 @@ export default function ProductDetailPage() {
               立即购买
             </button>
           </div>
+          {cartErr && <p className="product-detail-err">{cartErr}</p>}
         </div>
       </div>
     </div>

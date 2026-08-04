@@ -1,12 +1,12 @@
 /**
  * 个人中心页
  */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Icon from '../components/Icon';
-import { getOrders, getAddresses, createAddress, updateAddress, deleteAddress, uploadFile, getMe, updateMe, getTickets, createOrder } from '../api';
+import { getOrders, getAddresses, createAddress, updateAddress, deleteAddress, uploadFile, getMe, updateMe, getTickets, createOrder, getCart, removeFromCart } from '../api';
 import { ITINERARY_INIT } from '../constants/bridgeData';
-import type { Order, Address, CreateAddressRequest, Ticket } from '../types';
+import type { Order, Address, CreateAddressRequest, Ticket, CartItem } from '../types';
 import { getToken } from '../api/client';
 
 const NAV_ITEMS = [
@@ -235,14 +235,69 @@ function ItinerarySection() {
 
 function CartSection() {
   const navigate = useNavigate();
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(() => {
+    getCart()
+      .then(setItems)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  const handleRemove = async (id: number) => {
+    try {
+      await removeFromCart(id);
+      load();
+    } catch {}
+  };
+
+  const total = items.reduce((s, i) => s + Number(i.product?.price ?? 0) * i.quantity, 0);
+
+  if (loading) return <div className="order-empty">加载中...</div>;
+
   return (
     <div>
       <h2 className="profile-section-title">购物车</h2>
-      <div className="profile-cart-empty">
-        购物车功能已迁移至后端 API
-        <br />
-        <button className="btn-primary" style={{ marginTop: 12 }} onClick={() => navigate('/store')}>去商店看看</button>
-      </div>
+      {items.length === 0 ? (
+        <div className="profile-cart-empty">
+          购物车是空的
+          <br />
+          <button className="btn-primary" style={{ marginTop: 12 }} onClick={() => navigate('/store')}>去商店看看</button>
+        </div>
+      ) : (
+        <>
+          <div className="profile-cart-list">
+            {items.map(item => (
+              <div key={item.id} className="profile-cart-item">
+                <img
+                  src={item.product?.imageUrl || '/assets/placeholder.jpg'}
+                  alt={item.product?.name}
+                  className="profile-cart-img"
+                />
+                <div className="profile-cart-info">
+                  <div className="profile-cart-name">{item.product?.name}</div>
+                  <div className="profile-cart-price">¥{Number(item.product?.price ?? 0).toFixed(2)}</div>
+                </div>
+                <div className="profile-cart-qty"><span>{item.quantity}</span></div>
+                <button className="profile-cart-remove" title="移除" onClick={() => handleRemove(item.id)}>
+                  <Icon name="x" size={16} />
+                </button>
+                <button
+                  className="checkout-btn cart-checkout-btn"
+                  onClick={() => navigate('/checkout', { state: { product: item.product } })}
+                >
+                  去结算
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="profile-cart-actions">
+            <div className="profile-cart-total">合计 <strong>¥{total.toFixed(2)}</strong></div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

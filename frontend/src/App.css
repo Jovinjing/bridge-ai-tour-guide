@@ -2961,6 +2961,16 @@ body.ai-layout {
   color: var(--brand-800);
   padding-top: 12px;
 }
+.cart-checkout-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  margin-left: auto;
+}
+.product-detail-err {
+  color: var(--brand-error, #dc2626);
+  font-size: 13px;
+  margin-top: 8px;
+}
 
 /* 个人信息 */
 .profile-info-form {
