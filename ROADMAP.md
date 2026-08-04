@@ -71,8 +71,6 @@
 
 | # | 任务 | 说明 | 状态 |
 |---|------|------|------|
-| # | 任务 | 说明 | 状态 |
-|---|------|------|------|
 | 3.1 | 项目 TS 化（类型定义 + 配置 + 常量） | `types/index.ts` + `config.ts` + `constants/` | ✅ |
 | 3.2 | API 层全量重写（新路径 + 新响应格式） | `api/client.ts` + `api/index.ts`，对照 API.md §14 | ✅ |
 | 3.3 | **EventSource → fetch ReadableStream** | `api/sse.ts` — POST SSE 替代 EventSource | ✅ |
@@ -93,28 +91,54 @@
 ## Phase 4：部署上线
 
 **目标**：生产可用的 Docker Compose + Nginx。
+**状态**：全部配置文件已就绪 ✅，**部署待本地全链路验证完成后执行**（paci 决策：先本地测完再部署）。
 
 | # | 任务 | 说明 | 状态 |
 |---|------|------|------|
-| 4.1 | Dockerfile × 2（NestJS + Agent） | 多阶段构建 | ⏳ |
-| 4.2 | docker-compose.yml（全栈） | 4 个 service | ⏳ |
-| 4.3 | Nginx 生产配置（SSL + Gzip + 缓存） | 生产级 nginx.conf | ⏳ |
-| 4.4 | 前端 `vite build` 生产构建 | `dist/` 静态资源 | ⏳ |
-| 4.5 | 环境变量清单 + 密钥管理方案 | `.env.example` | ⏳ |
-| 4.6 | 数据库初始化脚本（schema + seed data） | `init.sql` | ⏳ |
+| 4.1 | Dockerfile × 2（NestJS + Agent） | 多阶段构建；agent entrypoint = `db push --skip-generate` + 启动 | ✅ |
+| 4.2 | docker-compose.yml（全栈） | 4 个 service；agent 含 LLM 主备 + embedding 完整变量 | ✅ |
+| 4.3 | Nginx 生产配置（SSL + Gzip + 缓存） | 生产级 nginx.conf | ✅ |
+| 4.4 | 前端 `vite build` 生产构建 | `dist/` 静态资源 | ✅ |
+| 4.5 | 环境变量清单 + 密钥管理方案 | `.env.example`（智谱主 + DeepSeek 备 + 硅基流动 embedding） | ✅ |
+| 4.6 | 数据库初始化脚本（schema + seed data） | `init.sql`（public 业务表；agent 表由 db push 管理） | ✅ |
+| 4.7 | 🔴 服务器部署 | 阿里云 ECS（47.76.138.191） | ⏳ 待本地验证完成 |
 
-**预计**：2-3 天
+**预计**：2-3 天（4.7 另计）
+
+---
+
+## Phase 3.5：本地运行修复与验证 ✅（2026-08-03）
+
+**背景**：paci 决策——"本地运行时项目问题很多，先不要打包部署，把 4 做完测完再说"。本阶段完成本地全链路修复 + 首次浏览器端到端实测。
+
+| # | 修复项 | 说明 |
+|---|--------|------|
+| 3.5.1 | LLM 主备自动切换 | 主：智谱 glm-4-flash（免费）；备：DeepSeek deepseek-chat；`withFallbacks` 包装补齐 `bindTools`/`_streamResponseChunks` |
+| 3.5.2 | Embedding 切换硅基流动 | bge-m3（1024 维免费），移除 `dimensions` 参数（硅基流动拒绝） |
+| 3.5.3 | agent 表 schema 隔离 | 独立 `agent` schema + `@@schema` + `::public.vector`，防 db push 误删 public 业务表 |
+| 3.5.4 | 向量检索阈值适配 | `SEARCH_THRESHOLD` 默认 0.55（bge-m3 中文分数区间） |
+| 3.5.5 | 部署文件对齐 | docker-compose/.env.example/Dockerfile/init.sql 补主备 LLM 变量 + .keys 卷 + prisma.config |
+| 3.5.6 | 🔴 图形验证码持续重置 | `useEffect` 依赖链：`refresh` 依赖每次渲染变化的 `onChange` → 每次渲染重生成验证码 → 登录不可用；修复为 onChange ref |
+| 3.5.7 | 🔴 SSE token 未解析 | `sse.ts` 把 `{"content":"..."}` 原始 JSON 传给 onToken → 页面渲染 JSON 片段；修复为 parse 取 content |
+| 3.5.8 | vite 代理端口错误 | `/agent/*` 指向 3003（实际 3001）→ 修复 |
+
+**验证成果（Playwright 浏览器实测，2026-08-03）**：
+- ✅ 首页渲染 / 健康检查代理 / 图形验证码通过 / 短信验证码 / 登录跳转
+- ✅ AI 对话流式回答（正常文本渲染，非 JSON 片段）
+- ✅ 工具调用：searchKnowledge（回答引用知识库）+ planRoute
+- ✅ 控制台 0 错误
+- 📋 问题记录见 `PROBLEM_LOG.md`（8 个问题，STAR 格式）
 
 ---
 
 ## 当前任务指针
 
-→ **Phase 3 ✅ 完成 — 进入 Phase 4 🚧**
+→ **Phase 3.5 本地修复与实测 ✅ — Phase 4 文件就绪，部署待验证**
 
 ```
-上次完成：Phase 3 — 前端适配（Vite + React 19 + TS，全部 12 个子任务）
-当前：    Phase 4 — 部署上线
-下一步：  Step 1 — Dockerfile 编写 + docker-compose.yml 完善
+上次完成：Phase 3.5 — 本地运行修复 + 首次浏览器端到端实测（3 个前端 bug 已修复）
+当前：    Phase 4 — 部署上线（配置文件已就绪，尚未部署）
+下一步：  继续本地实测（商店/商品/结算/个人中心等页面）→ 全部通过后部署 ECS
 ```
 
 ---
