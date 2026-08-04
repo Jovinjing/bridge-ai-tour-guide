@@ -5,6 +5,21 @@
 
 ---
 
+## [prisma migrate dev 要求 reset 全库：migrations 历史与数据库脱节] - 2026-08-04
+
+**遇到的状况**：新增 `CartItem`/`Address` 表后执行 `prisma migrate dev --name cart_addresses`，Prisma 检测到数据库与迁移历史不一致，提示 "We need to reset the public schema"（drop 全部数据）。
+
+**原因分析**：`migrations/01_init.sql` 是**旧版残留文件**——表名用 PascalCase（`"User"`/`"Good"`/`"Order"`、TEXT 类型），而数据库实际是重构后的新 schema（`users`/`goods`/`orders` snake_case、VarChar、@map）。迁移历史与数据库状态完全对不上，`migrate dev` 认为数据库被"篡改"，只能 reset 重建。
+
+**考虑的方案**：
+- 方案A：`prisma migrate reset` 接受重置（开发库有用户/订单/文化文档等测试数据，不可接受）
+- 方案B：手写 SQL 匹配**实际数据库表名**，`prisma db execute` 执行 + `prisma generate`，不碰 `_prisma_migrations`（推荐）
+
+**最终解决方案**：方案B。手写 `migrations/02_cart_addresses.sql`（cart_items/addresses 两表 + 索引 + 外键，文件头部注释说明同步方式），`db execute --file` 执行成功，`generate` 更新 client。验证：新模块 16 测试全绿，E2E 加购/地址全通过。
+**环境结论**：本项目开发库的 schema 同步方式是 `db execute + generate`（db push 流），**不要再用 `prisma migrate dev`**（会触发 reset 提示，误操作会丢数据）。
+
+---
+
 ## [图形验证码每敲一键就刷新，登录页无法输入验证码] - 2026-08-03
 
 **遇到的状况**：登录页输入图形验证码时，每敲一个字符验证码就重新生成，输入框被清空，永远无法通过验证。Playwright 实测发现：`page.fill` 触发 input 事件后，输入值立即被还原为空。
